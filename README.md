@@ -1,4 +1,4 @@
-# baseline-cli
+# Code Health Scanner
 
 A lightweight Node.js CLI tool to scan JS, HTML, and CSS files for modern web features and report their **Baseline** support using the official `web-features` dataset.  
 
