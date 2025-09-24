@@ -1,0 +1,33 @@
+{
+  "name": "baseline-cli",
+  "version": "1.0.0",
+  "description": "Tiny CLI that scans files for modern web feature usage and reports Baseline status (uses web-features).",
+  "type": "module",
+  "main": "check.js",
+  "bin": {
+    "baseline-check": "./check.js"
+  },
+  "scripts": {
+    "start": "node check.js",
+    "scan": "node check.js",
+    "demo": "node check.js demo.html",
+    "prepare-demo": "node check.js demo.html > demo-output.txt"
+  },
+  "keywords": [
+    "baseline",
+    "web-features",
+    "compatibility",
+    "cli",
+    "hackathon"
+  ],
+  "author": "Kalpana",
+  "license": "MIT",
+  "dependencies": {
+    "web-features": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kal10406/baseline-cli.git"
+  },
+  "homepage": "https://github.com/Kal10406/baseline-cli"
+}

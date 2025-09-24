@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+  <style>
+    .grid { display: grid; grid-template-columns: 1fr 1fr; }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <div>Item 1</div>
+    <div>Item 2</div>
+  </div>
+
+  <script>
+    fetch('https://jsonplaceholder.typicode.com/todos/1')
+      .then(res => res.json())
+      .then(console.log);
+
+    if ('IntersectionObserver' in window) {
+      console.log('IntersectionObserver is supported');
+    }
+  </script>
+</body>
+</html>

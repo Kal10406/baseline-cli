@@ -1,0 +1,92 @@
+import fs from 'fs';
+import path from 'path';
+import { features } from 'web-features';
+
+// Quick pattern -> web-features id mapping
+const PATTERNS = [
+  { name: 'Fetch API',            re: /\bfetch\(/i,                 id: 'fetch' },
+  { name: 'Service Workers',      re: /\bnavigator\.serviceWorker\b|serviceWorker\.register|serviceWorker/i, id: 'service-workers' },
+  { name: 'CSS Grid',             re: /\bdisplay:\s*grid\b/i,      id: 'css-grid' },
+  { name: 'IntersectionObserver', re: /\bIntersectionObserver\b/i, id: 'intersection-observer' },
+  { name: 'Web Animations API',   re: /\bElement\.animate\(|new\s+Animation\b|AnimationEvent\b/i, id: 'web-animations' },
+  { name: 'OffscreenCanvas',      re: /\bOffscreenCanvas\b/i,      id: 'offscreen-canvas' },
+  { name: 'WebRTC',               re: /\bRTCPeerConnection\b|\bgetUserMedia\b/i, id: 'webrtc' },
+  { name: 'WebSocket',            re: /\bnew\s+WebSocket\b/i,      id: 'websocket' },
+  { name: 'CSS container queries',re: /container-type:\s*\w+/i,   id: 'container-queries' }
+];
+
+function readFile(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (e) {
+    console.error('Cannot read file:', filePath);
+    process.exit(2);
+  }
+}
+
+function getBaselineStatus(featureId) {
+  const feature = features[featureId];
+  if (!feature) return { found: false };
+  const baseline = feature.status?.baseline ?? null;
+  return { found: true, baseline, raw: feature };
+}
+
+if (process.argv.length < 3) {
+  console.log('Usage: node check.js <file-or-folder>');
+  process.exit(0);
+}
+
+const target = process.argv[2];
+let files = [];
+
+let stat;
+try {
+  stat = fs.statSync(target);
+} catch (e) {
+  console.error('Target not found:', target);
+  process.exit(2);
+}
+
+if (stat.isDirectory()) {
+  const all = fs.readdirSync(target);
+  files = all.filter(f => /\.(js|jsx|ts|tsx|html|css)$/.test(f)).map(f => path.join(target, f));
+} else {
+  files = [target];
+}
+
+const aggregated = new Set();
+
+files.forEach(file => {
+  const text = readFile(file);
+  console.log(`\nScanning: ${file}`);
+  PATTERNS.forEach(p => {
+    if (p.re.test(text)) {
+      aggregated.add(p.id);
+      console.log(`  Found pattern: ${p.name}`);
+    }
+  });
+});
+
+if (aggregated.size === 0) {
+  console.log('\nNo known patterns found with the quick scanner. Try other files or expand PATTERNS.');
+  process.exit(0);
+}
+
+console.log('\n=== Baseline status for detected features ===');
+for (const id of aggregated) {
+  const result = getBaselineStatus(id);
+  if (!result.found) {
+    console.log(`• ${id}: ⚠️  (feature ID not found in web-features package)`);
+    continue;
+  }
+  const b = result.baseline;
+  if (!b) {
+    console.log(`• ${id}: ℹ️  (no baseline data available)`);
+  } else {
+    if (typeof b === 'string') {
+      console.log(`• ${id}: ${b}`);
+    } else {
+      console.log(`• ${id}:`, JSON.stringify(b));
+    }
+  }
+}
