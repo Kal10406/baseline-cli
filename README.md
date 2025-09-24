@@ -9,7 +9,7 @@ This project was built for the **Baseline Tooling Hackathon** to help web develo
 ## 🚀 Pain Point Solved
 
 Web developers often hesitate to use new features because it's unclear whether they are fully supported across browsers. Jumping between multiple sources is time-consuming and error-prone.  
-**baseline-cli** solves this by scanning your code and instantly reporting **Baseline compatibility** for detected features.
+**Code Health Scanner** solves this by scanning your code and instantly reporting **Baseline compatibility** for detected features.
 
 ---
 
