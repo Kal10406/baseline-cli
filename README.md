@@ -56,3 +56,15 @@ Clone the repository and install dependencies:
 git clone https://github.com/Kal10406/baseline-cli.git
 cd baseline-cli
 npm install
+
+## ⚡ Usage
+
+Follow these steps to run the scanner:
+
+### 1️⃣ Scan a single file
+
+If you want to check one file (like `demo.html`):
+
+```bash
+node check.js demo.html
+
